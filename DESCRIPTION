@@ -1,0 +1,25 @@
+Package: elfs
+Title: Evaluating and Estimating Latent Factor Scores
+Version: 0.0.0.9000
+Authors@R: c(person(given = "Neil", middle = NA, family = "Hester",
+    "neil.hester@uwaterloo.ca", role = c("aut", "cre")),
+    person(given = "Shawn", middle = NA, family = "Yee",
+    "s6yee@uwaterloo.ca", role = "aut"))
+Description: What the package does (one paragraph).
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 8.0.0
+Imports: 
+    magrittr
+Depends:
+    dplyr,
+    lavaan,
+    semTools,
+    kableExtra,
+    magick,
+    webshot2,
+    chromote
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
