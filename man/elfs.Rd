@@ -12,7 +12,7 @@ elfs(
   f4_cols = NULL,
   f5_cols = NULL,
   f6_cols = NULL,
-  f_general = NULL,
+  fg_cols = NULL,
   ordered = FALSE,
   missing = "listwise",
   dynamic = FALSE,
@@ -33,11 +33,11 @@ elfs(
 \arguments{
 \item{data}{data.frame object}
 
-\item{f1_cols, f2_cols, f3_cols, f4_cols, f5_cols, f6_cols}{character vector(s) listing column names included in (each) latent factor. Only \code{f1_cols} is required.}
+\item{f1_cols, f2_cols, f3_cols, f4_cols, f5_cols, f6_cols, fg_cols}{character vector(s) listing column names included in (each) latent factor. Only \code{f1_cols} is required.}
 
 \item{ordered}{whether to treat measured variables as ordinal (vs. continuous; see \code{\link[lavaan:sem]{lavaan::sem()}})}
 
-\item{f1_name, f2_name, f3_name, f4_name, f5_name, f6_name}{optional names for each specified latent factor.}
+\item{f1_name, f2_name, f3_name, f4_name, f5_name, f6_name, fg_name}{optional names for each specified latent factor.}
 }
 \description{
 Estimates and evaluates latent factor scores for scales

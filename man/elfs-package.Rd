@@ -9,13 +9,21 @@ What the package does (one paragraph).
 
 What the package does (one paragraph).
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/SarcylY/elfs}
+  \item Report bugs at \url{https://github.com/SarcylY/elfs/issues}
+}
+
+}
 \author{
-\strong{Maintainer}: Neil Hester \email{neil.hester@uwaterloo.ca}
+\strong{Maintainer}: Neil Hester \email{neil.hester@uwaterloo.ca} (\href{https://orcid.org/0000-0003-3025-766X}{ORCID})
 
 Authors:
 \itemize{
-  \item Neil Hester \email{neil.hester@uwaterloo.ca}
-  \item Shawn Yee \email{s6yee@uwaterloo.ca}
+  \item Neil Hester \email{neil.hester@uwaterloo.ca} (\href{https://orcid.org/0000-0003-3025-766X}{ORCID})
+  \item Shawn Yee \email{s6yee@uwaterloo.ca} (\href{https://orcid.org/0009-0006-7791-4179}{ORCID})
 }
 
 }

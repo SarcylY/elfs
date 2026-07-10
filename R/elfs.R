@@ -9,10 +9,10 @@
 #' @export
 #' @title Estimates and evaluates latent factor scores for scales
 #' @param data data.frame object
-#' @param f1_cols,f2_cols,f3_cols,f4_cols,f5_cols,f6_cols character vector(s) listing column names included in (each) latent factor. Only `f1_cols` is required.
-#' @param f1_name,f2_name,f3_name,f4_name,f5_name,f6_name optional names for each specified latent factor.
+#' @param f1_cols,f2_cols,f3_cols,f4_cols,f5_cols,f6_cols,fg_cols character vector(s) listing column names included in (each) latent factor. Only `f1_cols` is required.
+#' @param f1_name,f2_name,f3_name,f4_name,f5_name,f6_name,fg_name optional names for each specified latent factor.
 #' @param ordered whether to treat measured variables as ordinal (vs. continuous; see [lavaan::sem()])
-elfs <- function(data, f1_cols, f2_cols = NULL, f3_cols = NULL, f4_cols = NULL, f5_cols = NULL, f6_cols = NULL, f_general = NULL, ordered = FALSE, missing = "listwise", dynamic = FALSE, meas_invar = NULL, modify = NULL, lfs_method = NULL, lfs_transform = TRUE, chrome_bypass = FALSE, f1_name = NULL, f2_name = NULL, f3_name = NULL, f4_name = NULL, f5_name = NULL, f6_name = NULL, fg_name = NULL) {
+elfs <- function(data, f1_cols, f2_cols = NULL, f3_cols = NULL, f4_cols = NULL, f5_cols = NULL, f6_cols = NULL, fg_cols = NULL, ordered = FALSE, missing = "listwise", dynamic = FALSE, meas_invar = NULL, modify = NULL, lfs_method = NULL, lfs_transform = TRUE, chrome_bypass = FALSE, f1_name = NULL, f2_name = NULL, f3_name = NULL, f4_name = NULL, f5_name = NULL, f6_name = NULL, fg_name = NULL) {
 
 
   ## required packages
@@ -53,8 +53,7 @@ elfs <- function(data, f1_cols, f2_cols = NULL, f3_cols = NULL, f4_cols = NULL, 
   f4_s <- colnames(select(data, all_of(f4_cols)))
   f5_s <- colnames(select(data, all_of(f5_cols)))
   f6_s <- colnames(select(data, all_of(f6_cols)))
-
-  fg_s <- f_general
+  fg_s <- colnames(select(data, all_of(fg_cols)))
 
 
   ###use of lav_string to construct lavaan syntax by factor
@@ -128,7 +127,7 @@ elfs <- function(data, f1_cols, f2_cols = NULL, f3_cols = NULL, f4_cols = NULL, 
 
   }
 
-  if(!is.null(f_general)){
+  if(!is.null(fg_cols)){
 
     fg_n <- ifelse(is.null(fg_name), "FactorG", fg_name)
     fg_c <- lav_string(fg_n, fg_s)
@@ -156,15 +155,28 @@ elfs <- function(data, f1_cols, f2_cols = NULL, f3_cols = NULL, f4_cols = NULL, 
 
   }
 
+  ## set orthogonal value
+
+  if(is.null(fg_cols)){
+
+    orthogonal = FALSE
+
+  } else {
+
+    orthogonal = TRUE
+    message("Because a bifactor model has been specified, orthogonal = TRUE for all models.")
+
+  }
+
   ### FIT MODEL ###
 
   if(ordered == FALSE) {
 
-    cfa_model <- cfa(cfa_string, data, ordered = ordered, missing = missing, std.lv=TRUE) # CFA object
+    cfa_model <- cfa(cfa_string, data, ordered = ordered, orthogonal = orthogonal, missing = missing, std.lv=TRUE) # CFA object
 
   } else {
 
-    cfa_model <- cfa(cfa_string, data, ordered = ordered, missing = missing, estimator = "WLSMV", std.lv=TRUE)
+    cfa_model <- cfa(cfa_string, data, ordered = ordered, orthogonal = orthogonal, missing = missing, estimator = "WLSMV", std.lv=TRUE)
 
   }
 
@@ -263,17 +275,17 @@ elfs <- function(data, f1_cols, f2_cols = NULL, f3_cols = NULL, f4_cols = NULL, 
 
     if(ordered == FALSE){
 
-      cfa_config <- cfa(cfa_string, data, ordered = ordered, missing = missing, group = meas_invar, std.lv=TRUE)
-      cfa_weak <- cfa(cfa_string, data, ordered = ordered, missing = missing, group = meas_invar, group.equal = c("loadings"), std.lv=TRUE)
-      cfa_strong <- cfa(cfa_string, data, ordered = ordered, missing = missing, group = meas_invar, group.equal = c("loadings", "intercepts"), std.lv=TRUE)
-      cfa_strict <- cfa(cfa_string, data, ordered = ordered, missing = missing, group = meas_invar, group.equal = c("loadings", "intercepts", "residuals"), std.lv=TRUE)
+      cfa_config <- cfa(cfa_string, data, ordered = ordered, orthogonal = orthogonal, missing = missing, group = meas_invar, std.lv=TRUE)
+      cfa_weak <- cfa(cfa_string, data, ordered = ordered, orthogonal = orthogonal, missing = missing, group = meas_invar, group.equal = c("loadings"), std.lv=TRUE)
+      cfa_strong <- cfa(cfa_string, data, ordered = ordered, orthogonal = orthogonal, missing = missing, group = meas_invar, group.equal = c("loadings", "intercepts"), std.lv=TRUE)
+      cfa_strict <- cfa(cfa_string, data, ordered = ordered, orthogonal = orthogonal, missing = missing, group = meas_invar, group.equal = c("loadings", "intercepts", "residuals"), std.lv=TRUE)
 
     } else {
 
-      cfa_config <- cfa(cfa_string, data, ordered = ordered, missing = missing, group = meas_invar, std.lv=TRUE)
-      cfa_weak <- cfa(cfa_string, data, ordered = ordered, missing = missing, group = meas_invar, group.equal = c("loadings"), std.lv=TRUE)
-      cfa_strong <- cfa(cfa_string, data, ordered = ordered, missing = missing, group = meas_invar, group.equal = c("loadings", "thresholds"), std.lv=TRUE)
-      cfa_strict <- cfa(cfa_string, data, ordered = ordered, missing = missing, group = meas_invar, group.equal = c("loadings", "thresholds", "residuals"), std.lv=TRUE)
+      cfa_config <- cfa(cfa_string, data, ordered = ordered, orthogonal = orthogonal, missing = missing, group = meas_invar, std.lv=TRUE)
+      cfa_weak <- cfa(cfa_string, data, ordered = ordered, orthogonal = orthogonal, missing = missing, group = meas_invar, group.equal = c("loadings"), std.lv=TRUE)
+      cfa_strong <- cfa(cfa_string, data, ordered = ordered, orthogonal = orthogonal, missing = missing, group = meas_invar, group.equal = c("loadings", "thresholds"), std.lv=TRUE)
+      cfa_strict <- cfa(cfa_string, data, ordered = ordered, orthogonal = orthogonal, missing = missing, group = meas_invar, group.equal = c("loadings", "thresholds", "residuals"), std.lv=TRUE)
 
     }
 
@@ -502,7 +514,7 @@ elfs <- function(data, f1_cols, f2_cols = NULL, f3_cols = NULL, f4_cols = NULL, 
 
 ### flowchart object
 
-# flowchart <- image_read("flowchart.jpg")
+flowchart <- image_read(system.file("extdata", "flowchart.jpg", package = "elfs"))
 
 ### LAV_STRING
 #creates lavaan interpretable string for each specified factor
@@ -620,8 +632,6 @@ h <- function(model){
 
   h_vector <- vector()
 
-  if(is.null(f_general)){
-
     for(i in 1:length(lfs_vector)){
 
       loads <- dplyr::filter(standardizedsolution(model), lhs == lfs_vector[i] & op == "=~")
@@ -638,27 +648,6 @@ h <- function(model){
       h_vector[i] <- H
 
     }
-
-  } else {
-
-    for(i in 1:(length(lfs_vector)-1)){
-
-      loads <- dplyr::filter(standardizedsolution(model), lhs == lfs_vector[i] & op == "=~")
-      indicator_vector <- loads$rhs
-      errors <- dplyr::filter(standardizedsolution(model), lhs %in% indicator_vector)
-
-      #H
-      loads <- dplyr::mutate(loads, I2 = (est.std^2)/(1-est.std^2))
-      sumI2 <- sum(loads$I2)
-      mind <- 1/sumI2
-      majd <- 1+mind
-      H <- 1/majd
-
-      h_vector[i] <- H
-
-    }
-
-  }
 
   return(h_vector)
 
