@@ -487,11 +487,11 @@ elfs <- function(data, f1_cols, f2_cols = NULL, f3_cols = NULL, f4_cols = NULL, 
 
     resize_height <- paste0("x", as.character(image_info(all_tables)$height))
 
-    full_chart <- image_append(c(image_scale(flowchart, resize_height), all_tables))
+    full_chart <- image_append(c(image_scale(image_read(system.file("extdata", "flowchart.jpg", package = "elfs")), resize_height), all_tables))
 
   } else {
 
-    full_chart <- image_scale(flowchart, as.character(500))
+    full_chart <- image_scale(image_read(system.file("extdata", "flowchart.jpg", package = "elfs")), as.character(500))
 
   }
 
@@ -514,7 +514,7 @@ elfs <- function(data, f1_cols, f2_cols = NULL, f3_cols = NULL, f4_cols = NULL, 
 
 ### flowchart object
 
-flowchart <- image_read(system.file("extdata", "flowchart.jpg", package = "elfs"))
+# flowchart <- image_read(system.file("extdata", "flowchart.jpg", package = "elfs"))
 
 ### LAV_STRING
 #creates lavaan interpretable string for each specified factor
