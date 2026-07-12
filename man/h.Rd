@@ -2,10 +2,16 @@
 % Please edit documentation in R/elfs.R
 \name{h}
 \alias{h}
-\title{A Function that Calculates Coefficient H}
+\title{Calculating Coefficient H}
 \usage{
 h(model)
 }
+\arguments{
+\item{model}{lavaan fitted model object}
+}
+\value{
+numeric indicating Coefficient H
+}
 \description{
-A Function that Calculates Coefficient H
+adapted from \if{html}{\out{<a href = "https://github.com/jsakaluk/scripty">}}jsakaluk/psyscores\if{html}{\out{</a>}}
 }

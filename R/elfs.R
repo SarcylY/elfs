@@ -9,10 +9,22 @@
 #' @export
 #' @title Estimates and evaluates latent factor scores for scales
 #' @param data data.frame object
-#' @param f1_cols,f2_cols,f3_cols,f4_cols,f5_cols,f6_cols,fg_cols character vector(s) listing column names included in (each) latent factor. Only `f1_cols` is required.
-#' @param f1_name,f2_name,f3_name,f4_name,f5_name,f6_name,fg_name optional names for each specified latent factor.
-#' @param ordered whether to treat measured variables as ordinal (vs. continuous; see [lavaan::sem()])
-elfs <- function(data, f1_cols, f2_cols = NULL, f3_cols = NULL, f4_cols = NULL, f5_cols = NULL, f6_cols = NULL, fg_cols = NULL, ordered = FALSE, missing = "listwise", dynamic = FALSE, meas_invar = NULL, modify = NULL, lfs_method = NULL, lfs_transform = TRUE, chrome_bypass = FALSE, f1_name = NULL, f2_name = NULL, f3_name = NULL, f4_name = NULL, f5_name = NULL, f6_name = NULL, fg_name = NULL) {
+#' @param f1_cols,f2_cols,f3_cols,f4_cols,f5_cols,f6_cols Character vector(s) listing column names included in (each) latent factor. Only `f1_cols` is required.
+#' @param fg_cols Character vector listing column names included in additionally-specified "general factor" (e.g., for higher-order or bifactor models).
+#' @param f1_name,f2_name,f3_name,f4_name,f5_name,f6_name Optional names (character) for each specified latent factor.
+#' @param fg_name Optional name (character) for "general factor" (see argument `fg_cols`, defaults to "FactorG").
+#' @param ordered Whether to treat measured variables as ordinal (vs. continuous; see [lavaan::sem()]). FALSE by default.
+#' @param missing How to treat missing data (listwise deletion by default, see [lavaan::lavOptions()] for alternatives)
+#' @param dynamic Whether to estimate dynamic fit indices <a href = "https://pubmed.ncbi.nlm.nih.gov/34694832"/>(McNeish & Wolf, 2023)</a>. To use, download the latest development version from <a href = "https://github.com/melissagwolf/dynamic">Github</a> using `pak::pkg_install("dynamic")` or `devtools::install_github("melissagwolf/dynamic")`. FALSE by default.
+#' @param meas_invar Character indicating column name to split-by when conducting measurement invariance across a categorical variable. NULL by default, assuming no measurement invariance analysis.
+#' @param modify Additional character or character vector to be attached to the SEM specification prior to model fitting (e.g., specifying correlated residual variances)
+#' @param lfs_method Character string indicating method for estimating latent factor scores (for details and default information, see [lavaan::lavPredict()])
+#' @param lfs_transform Whether to transform extracted factor scores to match model-implied mean and variance-covariance (for details, see [lavaan::lavPredict()]). TRUE by default, following best practice.
+#' @param chrome_bypass Whether to bypass chrome-screenshot method for displaying results from running `elfs()`. If TRUE, prints results. FALSE by default.
+elfs <- function(data, f1_cols, f2_cols = NULL, f3_cols = NULL, f4_cols = NULL, f5_cols = NULL, f6_cols = NULL, fg_cols = NULL,
+                 f1_name = NULL, f2_name = NULL, f3_name = NULL, f4_name = NULL, f5_name = NULL, f6_name = NULL, fg_name = NULL,
+                 ordered = FALSE, missing = "listwise", dynamic = FALSE, meas_invar = NULL, modify = NULL,
+                 lfs_method = NULL, lfs_transform = TRUE, chrome_bypass = FALSE) {
 
 
   ## required packages
@@ -45,7 +57,7 @@ elfs <- function(data, f1_cols, f2_cols = NULL, f3_cols = NULL, f4_cols = NULL, 
 
   }
 
-  ###column vector creation
+  ###column vector creation (redundant if fX_cols are exact columns, required if e.g., starts_with() is used)
 
   f1_s <- colnames(select(data, all_of(f1_cols)))
   f2_s <- colnames(select(data, all_of(f2_cols)))
@@ -147,7 +159,7 @@ elfs <- function(data, f1_cols, f2_cols = NULL, f3_cols = NULL, f4_cols = NULL, 
 
     if(!is.character(modify)){
 
-      stop("The argument \"modify\" needs to be a character string or vector of character strings representing lavaan modification indices.")
+      stop("The argument 'modify' must be a character string or vector of character strings representing lavaan modification indices.")
 
     }
 
@@ -171,11 +183,11 @@ elfs <- function(data, f1_cols, f2_cols = NULL, f3_cols = NULL, f4_cols = NULL, 
   ### FIT MODEL ###
 
   if(ordered == FALSE) {
-
+  #fitting for continuous indicators
     cfa_model <- cfa(cfa_string, data, ordered = ordered, orthogonal = orthogonal, missing = missing, std.lv=TRUE) # CFA object
 
   } else {
-
+  #fitting for ordinal indicators
     cfa_model <- cfa(cfa_string, data, ordered = ordered, orthogonal = orthogonal, missing = missing, estimator = "WLSMV", std.lv=TRUE)
 
   }
@@ -210,16 +222,14 @@ elfs <- function(data, f1_cols, f2_cols = NULL, f3_cols = NULL, f4_cols = NULL, 
 
     }
 
-
-
   } else {
-
+  #dynamic == FALSE
     cfa_dynamic <- "To request dynamic fit indices, install the 'dynamic' package (https://github.com/cran/dynamic) and set dynamic = TRUE in this function or visit https://dynamicfit.app/ and provide the necessary inputs."
 
   }
 
   cfa_matrix <- cfa.tab(x = cfa_model, robust = robust_set)
-  colnames(cfa_matrix) <- c("Chi\u00B2", "df", "p", "CFI", "RMSEA", "RMS_lo", "RMS_hi", "SRMR")
+  colnames(cfa_matrix) <- c("Chi\u00B2", "df", "p", "CFI", "RMSEA", "RMSEA_lo", "RMSEA_hi", "SRMR")
 
   lfs_fit <- cfa_matrix |>
     kbl() |>
@@ -269,7 +279,7 @@ elfs <- function(data, f1_cols, f2_cols = NULL, f3_cols = NULL, f4_cols = NULL, 
 
     if(!is.character(meas_invar)){
 
-      stop("The argument \"meas_invar\" needs to be a character string representing a grouping variable.")
+      stop("The argument 'meas_invar' needs to be a character string representing a grouping variable.")
 
     }
 
@@ -510,34 +520,32 @@ elfs <- function(data, f1_cols, f2_cols = NULL, f3_cols = NULL, f4_cols = NULL, 
 
 }
 
-## functions and assets
+## Additional helper functions
 
-### flowchart object
-
-# flowchart <- image_read(system.file("extdata", "flowchart.jpg", package = "elfs"))
-
-### LAV_STRING
-#creates lavaan interpretable string for each specified factor
+#' @title Generating lavaan-readable single-factor string from model specifications
+#' @param lfs_name Name of latent factor
+#' @param lfs_cols Column(s) loading onto latent factor
+#' @returns single-factor string readable by lavaan
 lav_string <- function(lfs_name, lfs_cols){
 
   string <- paste0(lfs_name,' =~ ', paste0(lfs_cols, collapse = " + "))
   return(string)
-
 }
 
-
-
-### LAV_STRING_TAU
-#creates lavaan interpretable string for each specified factor, assuming tau equivalence (all items load equally)
+#' @title Generating lavaan-readable tau-equivalent single-factor string from model specifications
+#' @param lfs_name Name of latent factor
+#' @param lfs_cols Column(s) loading onto latent factor
+#' @returns single-factor string readable by lavaan
 lav_string_tau <- function(lfs_name, lfs_cols){
 
   string <- paste0(lfs_name,' =~ 1*', paste0(lfs_cols, collapse = " + 1*"))
   return(string)
-
 }
 
-### CFA.TAB (adapted from tabledown)
-
+#' @title Generating APA-formatted tables of results
+#' @param x lavaan model object
+#' @param robust Whether robust RMSEAs are calculated. Defaults to FALSE.
+#' @returns data.frame object in APA format
 cfa.tab <- function(x, robust = FALSE) ##adapted from tabledown; 3 decimals needed for change CFI
 {
   ifelse(robust == TRUE, {
@@ -559,8 +567,10 @@ cfa.tab <- function(x, robust = FALSE) ##adapted from tabledown; 3 decimals need
   Model
 }
 
-### CFA.TAB.MULTI (adapted from tabledown; dependent on cfa.tab)
-
+#' @title Generating Concatenated APA-formatted tables of results
+#' @param x,y,z,a,b lavaan model object(s)
+#' @param robust Whether robust RMSEAs are calculated. Defaults to FALSE.
+#' @returns data.frame object in APA format
 cfa.tab.multi <- function (x, y, z = NULL, a = NULL, b = NULL, robust = FALSE) ##adapted from tabledown
 {
   if (is.null(z) & is.null(a) & is.null(b)) {
@@ -623,9 +633,10 @@ cfa.tab.multi <- function (x, y, z = NULL, a = NULL, b = NULL, robust = FALSE) #
   table
 }
 
-### H (adapted from the reliability function in jsakaluk/psyscores)
-#' A Function that Calculates Coefficient H
-
+#' @title Calculating Coefficient H
+#' @description adapted from <a href = "https://github.com/jsakaluk/scripty">jsakaluk/psyscores</a>
+#' @param model lavaan fitted model object
+#' @returns numeric indicating Coefficient H
 h <- function(model){
 
   lfs_vector <- unique(filter(standardizedsolution(model), op == "=~")$lhs)
@@ -654,7 +665,10 @@ h <- function(model){
 }
 
 ### BOX_OUTPUT
-
+#' @title Generating readable image output
+#' @param table data table
+#' @param border Colour used to surround data table
+#' @returns image of data table with coloured border
 box_output <- function(table, border){
 
   #file = paste0("elfs_figures/", deparse(substitute(table)), ".png") #scrap for as_image files going into folder
@@ -670,7 +684,10 @@ box_output <- function(table, border){
 }
 
 ### HEAD_OUTPUT
-
+#' @title Generating readable output
+#' @param table data table
+#' @param color Colour used to surround data table
+#' @returns data table with coloured border
 head_output <- function(table, color){
 
   table |>

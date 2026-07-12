@@ -13,6 +13,13 @@ elfs(
   f5_cols = NULL,
   f6_cols = NULL,
   fg_cols = NULL,
+  f1_name = NULL,
+  f2_name = NULL,
+  f3_name = NULL,
+  f4_name = NULL,
+  f5_name = NULL,
+  f6_name = NULL,
+  fg_name = NULL,
   ordered = FALSE,
   missing = "listwise",
   dynamic = FALSE,
@@ -20,24 +27,35 @@ elfs(
   modify = NULL,
   lfs_method = NULL,
   lfs_transform = TRUE,
-  chrome_bypass = FALSE,
-  f1_name = NULL,
-  f2_name = NULL,
-  f3_name = NULL,
-  f4_name = NULL,
-  f5_name = NULL,
-  f6_name = NULL,
-  fg_name = NULL
+  chrome_bypass = FALSE
 )
 }
 \arguments{
 \item{data}{data.frame object}
 
-\item{f1_cols, f2_cols, f3_cols, f4_cols, f5_cols, f6_cols, fg_cols}{character vector(s) listing column names included in (each) latent factor. Only \code{f1_cols} is required.}
+\item{f1_cols, f2_cols, f3_cols, f4_cols, f5_cols, f6_cols}{Character vector(s) listing column names included in (each) latent factor. Only \code{f1_cols} is required.}
 
-\item{ordered}{whether to treat measured variables as ordinal (vs. continuous; see \code{\link[lavaan:sem]{lavaan::sem()}})}
+\item{fg_cols}{Character vector listing column names included in additionally-specified "general factor" (e.g., for higher-order or bifactor models).}
 
-\item{f1_name, f2_name, f3_name, f4_name, f5_name, f6_name, fg_name}{optional names for each specified latent factor.}
+\item{f1_name, f2_name, f3_name, f4_name, f5_name, f6_name}{Optional names (character) for each specified latent factor.}
+
+\item{fg_name}{Optional name (character) for "general factor" (see argument \code{fg_cols}, defaults to "FactorG").}
+
+\item{ordered}{Whether to treat measured variables as ordinal (vs. continuous; see \code{\link[lavaan:sem]{lavaan::sem()}}). FALSE by default.}
+
+\item{missing}{How to treat missing data (listwise deletion by default, see \code{\link[lavaan:lavOptions]{lavaan::lavOptions()}} for alternatives)}
+
+\item{dynamic}{Whether to estimate dynamic fit indices \if{html}{\out{<a href = "https://pubmed.ncbi.nlm.nih.gov/34694832"/>}}(McNeish & Wolf, 2023)\if{html}{\out{</a>}}. To use, download the latest development version from \if{html}{\out{<a href = "https://github.com/melissagwolf/dynamic">}}Github\if{html}{\out{</a>}} using \code{pak::pkg_install("dynamic")} or \code{devtools::install_github("melissagwolf/dynamic")}. FALSE by default.}
+
+\item{meas_invar}{Character indicating column name to split-by when conducting measurement invariance across a categorical variable. NULL by default, assuming no measurement invariance analysis.}
+
+\item{modify}{Additional character or character vector to be attached to the SEM specification prior to model fitting (e.g., specifying correlated residual variances)}
+
+\item{lfs_method}{Character string indicating method for estimating latent factor scores (for details and default information, see \code{\link[lavaan:lavPredict]{lavaan::lavPredict()}})}
+
+\item{lfs_transform}{Whether to transform extracted factor scores to match model-implied mean and variance-covariance (for details, see \code{\link[lavaan:lavPredict]{lavaan::lavPredict()}}). TRUE by default, following best practice.}
+
+\item{chrome_bypass}{Whether to bypass chrome-screenshot method for displaying results from running \code{elfs()}. If TRUE, prints results. FALSE by default.}
 }
 \description{
 Estimates and evaluates latent factor scores for scales
