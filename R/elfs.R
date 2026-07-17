@@ -1,16 +1,12 @@
 #' @import dplyr
 #' @import lavaan
 #' @import semTools
-#' @import kableExtra
-#' @import magick
-#' @import webshot2
-#' @import chromote
 #'
 #' @export
 #' @title Estimates and evaluates latent factor scores for scales
 #' @param data data.frame object
-#' @param f1_cols,f2_cols,f3_cols,f4_cols,f5_cols,f6_cols Character vector(s) listing column names included in (each) latent factor. Only `f1_cols` is required.
-#' @param fg_cols Character vector listing column names included in additionally-specified "general factor" (e.g., for higher-order or bifactor models).
+#' @param f1_cols,f2_cols,f3_cols,f4_cols,f5_cols,f6_cols Character vector(s) listing column names included in (each) latent factor. Compatible with [dplyr::starts_with()] code. Only `f1_cols` is required.
+#' @param fg_cols Character vector listing column names included in additionally-specified "general factor" (i.e., bifactor models).
 #' @param f1_name,f2_name,f3_name,f4_name,f5_name,f6_name Optional names (character) for each specified latent factor.
 #' @param fg_name Optional name (character) for "general factor" (see argument `fg_cols`, defaults to "FactorG").
 #' @param ordered Whether to treat measured variables as ordinal (vs. continuous; see [lavaan::sem()]). FALSE by default.
@@ -19,8 +15,8 @@
 #' @param meas_invar Character indicating column name to split-by when conducting measurement invariance across a categorical variable. NULL by default, assuming no measurement invariance analysis.
 #' @param modify Additional character or character vector to be attached to the SEM specification prior to model fitting (e.g., specifying correlated residual variances)
 #' @param lfs_method Character string indicating method for estimating latent factor scores (for details and default information, see [lavaan::lavPredict()])
-#' @param lfs_transform Whether to transform extracted factor scores to match model-implied mean and variance-covariance (for details, see [lavaan::lavPredict()]). TRUE by default, following best practice.
-#' @param chrome_bypass Whether to bypass chrome-screenshot method for displaying results from running `elfs()`. If TRUE, prints results. FALSE by default.
+#' @param lfs_transform Whether to transform extracted factor scores to match model-implied mean and variance-covariance (for details, see [lavaan::lavPredict()]). TRUE by default, following best practice when latent factor scores are used in subsequent regression analysis.
+#' @param chrome_bypass Whether to bypass chrome-screenshot method for displaying results from running `elfs()`. FALSE by default.
 elfs <- function(data, f1_cols, f2_cols = NULL, f3_cols = NULL, f4_cols = NULL, f5_cols = NULL, f6_cols = NULL, fg_cols = NULL,
                  f1_name = NULL, f2_name = NULL, f3_name = NULL, f4_name = NULL, f5_name = NULL, f6_name = NULL, fg_name = NULL,
                  ordered = FALSE, missing = "listwise", dynamic = FALSE, meas_invar = NULL, modify = NULL,
@@ -210,15 +206,17 @@ elfs <- function(data, f1_cols, f2_cols = NULL, f3_cols = NULL, f4_cols = NULL, 
 
   if(dynamic == TRUE){
 
-    require(dynamic)
+    if(!requireNamespace("dynamic", quietly = TRUE)){
+      stop("Package 'dynamic' must be installed when argument dynamic is set to TRUE. See documentation for installation details")
+    }
 
     if(ordered == FALSE){
 
-      cfa_dynamic <- DDDFI(cfa_model)
+      cfa_dynamic <- dynamic::DDDFI(cfa_model)
 
     } else {
 
-      cfa_dynamic <- DDDFI(cfa_model, data = data, estimator = "WLSMV", scale = "categorical")
+      cfa_dynamic <- dynamic::DDDFI(cfa_model, data = data, estimator = "WLSMV", scale = "categorical")
 
     }
 
@@ -232,9 +230,9 @@ elfs <- function(data, f1_cols, f2_cols = NULL, f3_cols = NULL, f4_cols = NULL, 
   colnames(cfa_matrix) <- c("Chi\u00B2", "df", "p", "CFI", "RMSEA", "RMSEA_lo", "RMSEA_hi", "SRMR")
 
   lfs_fit <- cfa_matrix |>
-    kbl() |>
-    kable_styling(bootstrap_options = c("striped"), font_size = font_size) |>
-    add_footnote(c(paste0("Example text for reporting: The fit statistics for the estimated latent variable model are: \u03C7\u00B2(", cfa_matrix[1,2], ") = ", cfa_matrix[1,1], ", p ", ifelse(as.numeric(cfa_matrix[1,3]) < .001, "< .001", paste0("= ", cfa_matrix[1,3])), ", CFI = ", cfa_matrix[1,4], ", RMSEA = ", cfa_matrix[1,5], " (90% CI[", cfa_matrix[1,6], ", ", cfa_matrix[1,7], "]), SRMR = ", cfa_matrix[1,8], "."), "At minimum, report the CFI, RMSEA, and SRMR in your manuscript. To evaluate fit, Dynamic Fit Indices (McNeish & Wolf, 2023) are recommended. Reference the 'dynamic' object in the output list for output or for information about how to install this package.", "If ordered = TRUE or missing = \"ml\", robust CFI and RMSEA values are given above.", paste0("Modification indices (in the \"modind\" object) can be referenced to understand which parameters might be freed in the model to improve model fit. A data-driven approach to improving fit is generally not recommended for existing scales, but some adjustments might be justifiable (e.g., correlated residuals due to item similarities). Adjustments can be specified using the \"modify\" argument. In this model, setting modify = \"", paste(cfa_modind[1,1], cfa_modind[1,2], cfa_modind[1,3]), "\" would reduce the \u03C7\u00B2 of the model by ", format(round(cfa_modind[1,4])), ".")))
+    kableExtra::kbl() |>
+    kableExtra::kable_styling(bootstrap_options = c("striped"), font_size = font_size) |>
+    kableExtra::add_footnote(c(paste0("Example text for reporting: The fit statistics for the estimated latent variable model are: \u03C7\u00B2(", cfa_matrix[1,2], ") = ", cfa_matrix[1,1], ", p ", ifelse(as.numeric(cfa_matrix[1,3]) < .001, "< .001", paste0("= ", cfa_matrix[1,3])), ", CFI = ", cfa_matrix[1,4], ", RMSEA = ", cfa_matrix[1,5], " (90% CI[", cfa_matrix[1,6], ", ", cfa_matrix[1,7], "]), SRMR = ", cfa_matrix[1,8], "."), "At minimum, report the CFI, RMSEA, and SRMR in your manuscript. To evaluate fit, Dynamic Fit Indices (McNeish & Wolf, 2023) are recommended. Reference the 'dynamic' object in the output list for output or for information about how to install this package.", "If ordered = TRUE or missing = \"ml\", robust CFI and RMSEA values are given above.", paste0("Modification indices (in the \"modind\" object) can be referenced to understand which parameters might be freed in the model to improve model fit. A data-driven approach to improving fit is generally not recommended for existing scales, but some adjustments might be justifiable (e.g., correlated residuals due to item similarities). Adjustments can be specified using the \"modify\" argument. In this model, setting modify = \"", paste(cfa_modind[1,1], cfa_modind[1,2], cfa_modind[1,3]), "\" would reduce the \u03C7\u00B2 of the model by ", format(round(cfa_modind[1,4])), ".")))
 
   if(chrome_bypass == FALSE){
 
@@ -259,9 +257,9 @@ elfs <- function(data, f1_cols, f2_cols = NULL, f3_cols = NULL, f4_cols = NULL, 
   colnames(h_omega_ave) <- c("Coefficient H", "McDonald's Omega", "Average Variance Extracted (AVE)")
 
   cfa_rel <- h_omega_ave |>
-    kbl() |>
-    kable_styling(bootstrap_options = c("striped"), font_size = font_size) |>
-    add_footnote(c("Rules of thumb for reliability are H > .7 and Omega > .7.", "Coefficient H is the preferred reliability statistic for latent factor scores; McDonald's Omega is the preferred reliability statistic for sum/mean scores.", paste0(cfa_summ$data[[2]], " of ", ifelse(length(cfa_summ$data)==2,cfa_summ$data[[2]], cfa_summ$data[[3]]), " cases were used. Listwise deletion is specified by default. If using continuous indicators, missing = \"ml\" can be used to handle missing values with Full Information Maximum Likelihood (not imputation). This approach is only valid if data are missing completely at random (MCAR) or missing at random (MAR), but has the advantage of yielding an \"lfs\" matrix with cases equal to the input data frame.", "When using listwise deletion, if latent factor scores and the input data frame have different numbers of rows, filter rows with missing data prior to latent factor score estimation."))) ### note for future; incorporate H
+    kableExtra::kbl() |>
+    kableExtra::kable_styling(bootstrap_options = c("striped"), font_size = font_size) |>
+    kableExtra::add_footnote(c("Rules of thumb for reliability are H > .7 and Omega > .7.", "Coefficient H is the preferred reliability statistic for latent factor scores; McDonald's Omega is the preferred reliability statistic for sum/mean scores.", paste0(cfa_summ$data[[2]], " of ", ifelse(length(cfa_summ$data)==2,cfa_summ$data[[2]], cfa_summ$data[[3]]), " cases were used. Listwise deletion is specified by default. If using continuous indicators, missing = \"ml\" can be used to handle missing values with Full Information Maximum Likelihood (not imputation). This approach is only valid if data are missing completely at random (MCAR) or missing at random (MAR), but has the advantage of yielding an \"lfs\" matrix with cases equal to the input data frame.", "When using listwise deletion, if latent factor scores and the input data frame have different numbers of rows, filter rows with missing data prior to latent factor score estimation."))) ### note for future; incorporate H
 
   if(chrome_bypass == FALSE){
 
@@ -366,9 +364,9 @@ elfs <- function(data, f1_cols, f2_cols = NULL, f3_cols = NULL, f4_cols = NULL, 
     colnames(lfs_meas_invar_fit) <- c("Chi\u00B2", "df", "p", "CFI", "RMSEA", "RMS_lo", "RMS_hi", "SRMR", "\u0394Chi\u00B2", "\u0394df", "\u0394p", "\u0394CFI", "RMSEA\u1D05")
 
     lfs_meas_invar <- lfs_meas_invar_fit |>
-      kbl() |>
-      kable_styling(bootstrap_options = c("striped"), font_size = font_size) |>
-      add_footnote(c(paste0("Measurement Invariance for ", meas_invar, ". Guidelines for evaluating measurement invariance differ, but a few guidelines are given below. See Putnick & Bornstein (2016) for details as well as more information about partial invariance and probing items for sources of non-invariance."), "If LRT tests (i.e., \u0394Chi\u00B2) are not significant, measurement invariance has been demonstrated. However, this test is conservative.", mi_cfi_rmsead_text))
+      kableExtra::kbl() |>
+      kableExtra::kable_styling(bootstrap_options = c("striped"), font_size = font_size) |>
+      kableExtra::add_footnote(c(paste0("Measurement Invariance for ", meas_invar, ". Guidelines for evaluating measurement invariance differ, but a few guidelines are given below. See Putnick & Bornstein (2016) for details as well as more information about partial invariance and probing items for sources of non-invariance."), "If LRT tests (i.e., \u0394Chi\u00B2) are not significant, measurement invariance has been demonstrated. However, this test is conservative.", mi_cfi_rmsead_text))
 
     if(chrome_bypass == FALSE){
 
@@ -391,9 +389,9 @@ elfs <- function(data, f1_cols, f2_cols = NULL, f3_cols = NULL, f4_cols = NULL, 
     colnames(lfs_meas_invar_fit) <- c("Chi\u00B2", "df", "p", "CFI", "RMSEA", "RMS_hi", "RMS_lo", "SRMR", "\u0394Chi\u00B2", "\u0394df", "\u0394p", "\u0394CFI", "RMSEA\u1D05")
 
     lfs_meas_invar <- lfs_meas_invar_fit |>
-      kbl() |>
-      kable_styling(bootstrap_options = c("striped"), font_size = font_size) |>
-      add_footnote(c(paste0("Measurement invariance was not evaluated for any grouping variable. If you would like to evaluate measurement invariance, use the \"meas_invar\" argument to do so.")))
+      kableExtra::kbl() |>
+      kableExtra::kable_styling(bootstrap_options = c("striped"), font_size = font_size) |>
+      kableExtra::add_footnote(c(paste0("Measurement invariance was not evaluated for any grouping variable. If you would like to evaluate measurement invariance, use the \"meas_invar\" argument to do so.")))
 
     if(chrome_bypass == FALSE){
 
@@ -410,12 +408,12 @@ elfs <- function(data, f1_cols, f2_cols = NULL, f3_cols = NULL, f4_cols = NULL, 
 
   ### BOX 4: MULTIPLE CORRELATED CONSTRUCTS ###
 
-  lfs_corr_matrix <- round(cor(lfs, use = "na.or.complete"), 2)
+  lfs_corr_matrix <- round(stats::cor(lfs, use = "na.or.complete"), 2)
 
   lfs_corr <- lfs_corr_matrix |>
-    kbl() |>
-    kable_styling(bootstrap_options = c("striped"), font_size = font_size) |>
-    add_footnote(c(paste0("Correlation matrix for all latent factors. To the extent that factors are correlated, estimation of latent factor scores will better approximate true scores than sum/mean scores.")))
+    kableExtra::kbl() |>
+    kableExtra::kable_styling(bootstrap_options = c("striped"), font_size = font_size) |>
+    kableExtra::add_footnote(c(paste0("Correlation matrix for all latent factors. To the extent that factors are correlated, estimation of latent factor scores will better approximate true scores than sum/mean scores.")))
 
   if(chrome_bypass == FALSE){
 
@@ -465,16 +463,16 @@ elfs <- function(data, f1_cols, f2_cols = NULL, f3_cols = NULL, f4_cols = NULL, 
   if(ordered == FALSE){
 
     cfa_tau <- tau_fit |>
-      kbl() |>
-      kable_styling(bootstrap_options = c("striped"), font_size = font_size) |>
-      add_footnote(c(paste0("Likelihood Ratio Test comparing the tau-equivalent (i.e., equal loadings) model and the model with freely estimated loadings. If this test is not significant, sum/mean scores are recommended. If this test is significant, latent factor scores are generally recommended.", tau_cfi_rmsead_text)))
+      kableExtra::kbl() |>
+      kableExtra::kable_styling(bootstrap_options = c("striped"), font_size = font_size) |>
+      kableExtra::add_footnote(c(paste0("Likelihood Ratio Test comparing the tau-equivalent (i.e., equal loadings) model and the model with freely estimated loadings. If this test is not significant, sum/mean scores are recommended. If this test is significant, latent factor scores are generally recommended.", tau_cfi_rmsead_text)))
 
   } else {
 
     cfa_tau <- tau_fit |>
-      kbl() |>
-      kable_styling(bootstrap_options = c("striped"), font_size = font_size) |>
-      add_footnote(c(paste0("Likelihood Ratio Test comparing the tau-equivalent (i.e., equal loadings) model and the model with freely estimated loadings. If this test is not significant, sum/mean scores are recommended. If this test is significant, latent factor scores are generally recommended.", tau_cfi_rmsead_text, "The equal loadings model often produces very poor fit with ordinal indicators.")))
+      kableExtra::kbl() |>
+      kableExtra::kable_styling(bootstrap_options = c("striped"), font_size = font_size) |>
+      kableExtra::add_footnote(c(paste0("Likelihood Ratio Test comparing the tau-equivalent (i.e., equal loadings) model and the model with freely estimated loadings. If this test is not significant, sum/mean scores are recommended. If this test is significant, latent factor scores are generally recommended.", tau_cfi_rmsead_text, "The equal loadings model often produces very poor fit with ordinal indicators.")))
 
   }
 
@@ -493,15 +491,15 @@ elfs <- function(data, f1_cols, f2_cols = NULL, f3_cols = NULL, f4_cols = NULL, 
 
   if(chrome_bypass == FALSE){
 
-    all_tables <- image_append(c(lfs_fit_img, cfa_rel_img, lfs_meas_invar_img, lfs_corr_img, cfa_tau_img), stack = TRUE)
+    all_tables <- magick::image_append(c(lfs_fit_img, cfa_rel_img, lfs_meas_invar_img, lfs_corr_img, cfa_tau_img), stack = TRUE)
 
-    resize_height <- paste0("x", as.character(image_info(all_tables)$height))
+    resize_height <- paste0("x", as.character(magick::image_info(all_tables)$height))
 
-    full_chart <- image_append(c(image_scale(image_read(system.file("extdata", "flowchart.jpg", package = "elfs")), resize_height), all_tables))
+    full_chart <- magick::image_append(c(magick::image_scale(magick::image_read(system.file("extdata", "flowchart.jpg", package = "elfs")), resize_height), all_tables))
 
   } else {
 
-    full_chart <- image_scale(image_read(system.file("extdata", "flowchart.jpg", package = "elfs")), as.character(500))
+    full_chart <- magick::image_scale(magick::image_read(system.file("extdata", "flowchart.jpg", package = "elfs")), as.character(500))
 
   }
 
@@ -674,12 +672,12 @@ box_output <- function(table, border){
   #file = paste0("elfs_figures/", deparse(substitute(table)), ".png") #scrap for as_image files going into folder
 
   table |>
-    as_image() |>
-    image_read() |>
-    image_convert(format = "jpg") |>
-    image_border(color = "white", geometry = "1.5x1.5") |>
-    image_border(color = border, geometry = "3x3") |>
-    image_border(color = "white", geometry = "3x3")
+    kableExtra::as_image() |>
+    magick::image_read() |>
+    magick::image_convert(format = "jpg") |>
+    magick::image_border(color = "white", geometry = "1.5x1.5") |>
+    magick::image_border(color = border, geometry = "3x3") |>
+    magick::image_border(color = "white", geometry = "3x3")
 
 }
 
@@ -691,6 +689,6 @@ box_output <- function(table, border){
 head_output <- function(table, color){
 
   table |>
-    row_spec(row = 0, background = color)
+    kableExtra::row_spec(row = 0, background = color)
 
 }

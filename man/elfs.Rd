@@ -33,9 +33,9 @@ elfs(
 \arguments{
 \item{data}{data.frame object}
 
-\item{f1_cols, f2_cols, f3_cols, f4_cols, f5_cols, f6_cols}{Character vector(s) listing column names included in (each) latent factor. Only \code{f1_cols} is required.}
+\item{f1_cols, f2_cols, f3_cols, f4_cols, f5_cols, f6_cols}{Character vector(s) listing column names included in (each) latent factor. Compatible with \code{\link[dplyr:starts_with]{dplyr::starts_with()}} code. Only \code{f1_cols} is required.}
 
-\item{fg_cols}{Character vector listing column names included in additionally-specified "general factor" (e.g., for higher-order or bifactor models).}
+\item{fg_cols}{Character vector listing column names included in additionally-specified "general factor" (i.e., bifactor models).}
 
 \item{f1_name, f2_name, f3_name, f4_name, f5_name, f6_name}{Optional names (character) for each specified latent factor.}
 
@@ -53,9 +53,9 @@ elfs(
 
 \item{lfs_method}{Character string indicating method for estimating latent factor scores (for details and default information, see \code{\link[lavaan:lavPredict]{lavaan::lavPredict()}})}
 
-\item{lfs_transform}{Whether to transform extracted factor scores to match model-implied mean and variance-covariance (for details, see \code{\link[lavaan:lavPredict]{lavaan::lavPredict()}}). TRUE by default, following best practice.}
+\item{lfs_transform}{Whether to transform extracted factor scores to match model-implied mean and variance-covariance (for details, see \code{\link[lavaan:lavPredict]{lavaan::lavPredict()}}). TRUE by default, following best practice when latent factor scores are used in subsequent regression analysis.}
 
-\item{chrome_bypass}{Whether to bypass chrome-screenshot method for displaying results from running \code{elfs()}. If TRUE, prints results. FALSE by default.}
+\item{chrome_bypass}{Whether to bypass chrome-screenshot method for displaying results from running \code{elfs()}. FALSE by default.}
 }
 \description{
 Estimates and evaluates latent factor scores for scales
