@@ -1,0 +1,109 @@
+---
+title: "Short Dark Triad Example Dataset"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{ShortDarkTriad}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Introduction
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+The following vignette showcases the use of `elfs()` when applied to data from the Short Dark Triad (SD3; Paulhus & Jones, 2001), collected from the Open-Source Psychometrics Project. First, the dataset is loaded; responses were filtered to retain complete data, after converting responses of 0 to NA.
+
+```{r setup, message = FALSE}
+library(elfs)
+library(dplyr)
+library(magrittr)
+
+SD3_data <- elfs::ShortDarkTriad_data
+```
+
+## Multi-factor Model
+
+For our first model, we can conduct the most simplistic model on the SD3. Treating each of the factors of the Dark Triad (Machiavellianism, Narcissism, and Psychopathy) as separate factors measured by 9 items each. In the following model, all latent factors are allowed to be covary (i.e., oblique rotation).
+
+```{r, message = FALSE}
+#column selection can take in a traditional character vector, or use "starts_with()" or "ends_with()"
+SD3_elf_oblique <- elfs(data = SD3_data,
+                        f1_cols = starts_with("M"), f1_name = "Machiavellianism",
+                        f2_cols = c("N1", "N2", "N3", "N4", "N5", "N6", "N7", "N8", "N9"), f2_name = "Narcissism",
+                        f3_cols = starts_with("P"), f3_name = "Psychopathy", 
+                        chrome_bypass = T)
+```
+
+The resulting `elfs()` output contains information about your fitted model. By initiating specific calls, you can output information regarding:
+
+```{r}
+#Model Fit
+SD3_elf_oblique$fit
+
+#Individual Factor Reliabilities
+SD3_elf_oblique$rel
+
+#Latent Factor Correlations
+SD3_elf_oblique$corr
+
+#Comparison to Tau-equivalent Model Assumed by Cronbach's Alpha
+SD3_elf_oblique$tau
+```
+
+If latent factor scores are ultimately decided on, they can be easily extracted and incorporated into a dataset (here, the original dataframe):
+
+```{r}
+head(SD3_elf_oblique$lfs, 10)
+
+SD3_clean <- SD3_data %>%
+  bind_cols(SD3_elf_oblique$lfs)
+glimpse(SD3_clean)
+```
+
+## Bi-factor Model
+
+`elfs()` also contains baseline functionality to fit bifactor models. For example, we can specify a general "Evil" factor explaining leftover variance in the original model:
+
+```{r, message = FALSE}
+SD3_elf_bifac <- elfs(data = SD3_data,
+                      f1_cols = starts_with("M"), f1_name = "Machiavellianism",
+                      f2_cols = starts_with("N"), f2_name = "Narcissism",
+                      f3_cols = starts_with("P"), f3_name = "Psychopathy", 
+                      fg_cols = c(starts_with("M"), starts_with("N"), starts_with("P")), fg_name = "Evil",
+                      chrome_bypass = T)
+```
+
+The resulting models must set covariances between latent factors to 0 to identify the model. The `elfs()` output is then updated:
+
+```{r}
+#Model Fit
+SD3_elf_bifac$fit
+
+#Individual Factor Reliabilities
+SD3_elf_bifac$rel
+
+#Latent Factor Correlations
+SD3_elf_bifac$corr
+
+#Comparison to Tau-equivalent Model Assumed by Cronbach's Alpha
+SD3_elf_bifac$tau
+```
+
+As before, if latent factor scores are decided on, they can be easily extracted and attached to any dataset:
+
+If latent factor scores are ultimately decided on, they can be easily extracted and incorporated into a dataset (here, the original dataframe):
+
+```{r}
+head(SD3_elf_bifac$lfs, 10)
+
+SD3_clean_bifac <- SD3_data %>%
+  bind_cols(SD3_elf_bifac$lfs)
+glimpse(SD3_clean_bifac)
+```

@@ -1,0 +1,113 @@
+---
+title: "Need for Cognition Example Dataset"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{NeedforCognition}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Introduction
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+The following vignette showcases the use of `elfs()` when applied to data from the Need for Cognition scale (Cacioppo & Petty, 1982), using data collected and originally analyzed by Hussey and Hughes (2020). First, the dataset is loaded.
+
+```{r setup, message = FALSE}
+library(elfs)
+library(dplyr)
+library(magrittr)
+
+nfc_data <- elfs::NeedforCognition_HusseyHughes_data
+```
+
+## One-factor Model
+
+For our first model, we conduct the most simplistic model on the scale (all 18 items load onto the same factor).
+
+```{r, message = FALSE}
+nfc_elf <- elfs(data = nfc_data,
+                f1_cols = starts_with("nfc"), f1_name = "NeedforCognition",
+                chrome_bypass = T)
+```
+
+The resulting `elfs()` output contains information about your fitted model. By initiating specific calls, you can output information regarding:
+
+```{r}
+#Model Fit
+nfc_elf$fit
+
+#Individual Factor Reliabilities
+nfc_elf$rel
+
+#Latent Factor Correlations
+nfc_elf$corr
+
+#Comparison to Tau-equivalent Model Assumed by Cronbach's Alpha
+nfc_elf$tau
+```
+
+If latent factor scores are ultimately decided on, they can be easily extracted and incorporated into a dataset (here, the original dataframe):
+
+```{r}
+head(nfc_elf$lfs, 10)
+
+nfc_clean <- nfc_data %>%
+  bind_cols(nfc_elf$lfs)
+glimpse(nfc_clean)
+```
+
+## Measurement Invariance
+
+This simple model can be expanded, firstly by testing for measurement invariance. Within `nfc_data`, "sex" is a binary variable denoting the sex of the participant. Separate models for each group can be run using the following:
+
+```{r, message = FALSE}
+nfc_invar <- elfs(data = nfc_data,
+                  f1_cols = starts_with("nfc"), f1_name = "NeedforCognition",
+                  meas_invar = "sex",
+                  chrome_bypass = T)
+```
+
+The resulting information regarding measurement invariance can be viewed:
+
+```{r}
+#Raw model
+nfc_invar$group_models
+
+#Table summary
+nfc_invar$meas_invar
+```
+
+If desired, individual latent factor scores can be extracted for each group. 
+
+```{r}
+#Scores for sex = "m"
+head(nfc_invar$group_lfs[[1]]$m, 10)
+
+#Scores for sex = "f"
+head(nfc_invar$group_lfs[[1]]$f, 10)
+```
+
+## Dynamic Fit Indices (McNeish & Wolf, 2023)
+
+Finally, dynamic fit indices can also be requested:
+
+```{r, message = FALSE}
+nfc_dynamic <- elfs(data = nfc_data,
+                    f1_cols = starts_with("nfc"), f1_name = "NeedforCognition",
+                    dynamic = T,
+                    chrome_bypass = T)
+```
+
+Resultant information about updated model cutoffs can be displayed:
+
+```{r}
+nfc_dynamic$dynamic
+```
