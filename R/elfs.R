@@ -1,6 +1,5 @@
 #' @import dplyr
 #' @import lavaan
-#' @import semTools
 #'
 #' @export
 #' @title Estimates and evaluates latent factor scores for scales
@@ -248,8 +247,8 @@ elfs <- function(data, f1_cols, f2_cols = NULL, f3_cols = NULL, f4_cols = NULL, 
 
 
   h <- h(cfa_model) #coefficient H
-  omega <- unlist(compRelSEM(cfa_model), use.names = FALSE) # McDonald's omega, a reliability measure that does not assume tau-equivalence
-  lfs_ave <- AVE(cfa_model) #average variance extracted
+  omega <- unlist(semTools::compRelSEM(cfa_model), use.names = FALSE) # McDonald's omega, a reliability measure that does not assume tau-equivalence
+  lfs_ave <- semTools::AVE(cfa_model) #average variance extracted
 
   h_omega_ave <- cbind(h, omega, lfs_ave) |>
     round(2)

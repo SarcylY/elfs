@@ -13,19 +13,19 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 8.0.0
 Imports: 
+    dynamic,
     kableExtra,
     magick,
     magrittr,
     MOTE,
+    semTools (>= 0.5-9),
     utils
 Depends:
     dplyr,
     lavaan,
-    semTools,
     R (>= 4.1.0)
 Suggests: 
     testthat (>= 3.0.0),
-    dynamic,
     knitr,
     rmarkdown
 Config/testthat/edition: 3
@@ -33,3 +33,5 @@ URL: https://github.com/SarcylY/elfs, https://sarcyly.github.io/elfs/
 BugReports: https://github.com/SarcylY/elfs/issues
 LazyData: true
 VignetteBuilder: knitr
+Remotes: 
+    melissagwolf/dynamic
