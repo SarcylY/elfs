@@ -7,7 +7,10 @@ Authors@R: c(person(given = "Neil", middle = NA, family = "Hester",
     person(given = "Shawn", middle = NA, family = "Yee",
     "s6yee@uwaterloo.ca", role = "aut",
     comment = c(ORCID = "0009-0006-7791-4179")))
-Description: What the package does (one paragraph).
+Description: Automated evaluation/estimation of latent factor scores, building 
+  on 'lavaan'. Provide the data in wide format, column names for each factor,
+  and receive comprehensive information regarding model fit, reliability, 
+  factor correlations, measurement invariance, and dynamic fit indices.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
