@@ -11,6 +11,7 @@ What the package does (one paragraph).
 Useful links:
 \itemize{
   \item \url{https://github.com/SarcylY/elfs}
+  \item \url{https://sarcyly.github.io/elfs/}
   \item Report bugs at \url{https://github.com/SarcylY/elfs/issues}
 }
 
