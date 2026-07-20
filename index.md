@@ -44,6 +44,6 @@ vignettes below (depending on the kind of model desired):
 
 ## References
 
-Hester, N., Yee, S., & McNeish, D. (2026). *elfs: An R Package to
-Promote the Intentional Selection of Scoring Method for Psychological
-Scales* \[Manuscript in preparation\].
+\[REDACTED\]. (2026). *elfs: An R Package to Promote the Intentional
+Selection of Scoring Method for Psychological Scales* \[Manuscript in
+preparation\].

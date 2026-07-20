@@ -1,6 +1,9 @@
 # elfs: Evaluating and Estimating Latent Factor Scores
 
-What the package does (one paragraph).
+Automated evaluation/estimation of latent factor scores, building on
+'lavaan'. Provide the data in wide format, column names for each factor,
+and receive comprehensive information regarding model fit, reliability,
+factor correlations, measurement invariance, and dynamic fit indices.
 
 ## See also
 
