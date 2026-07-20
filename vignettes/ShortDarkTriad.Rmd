@@ -67,6 +67,32 @@ SD3_clean <- SD3_data %>%
 glimpse(SD3_clean)
 ```
 
+## Ordinal Measured Variables
+
+An additional specification that measured variables should be treated as ordinal variables (i.e., using the DWLS estimator, instead of ML) can be specified using the typical `ordered = T` syntax from *lavaan*.
+
+```{r, message = FALSE}
+#column selection can take in a traditional character vector, or use "starts_with()" or "ends_with()"
+SD3_elf_ordered <- elfs(data = SD3_data,
+                        f1_cols = starts_with("M"), f1_name = "Machiavellianism",
+                        f2_cols = starts_with("N"), f2_name = "Narcissism",
+                        f3_cols = starts_with("P"), f3_name = "Psychopathy", 
+                        ordered = T, 
+                        chrome_bypass = T)
+```
+
+Note that when `ordered = T`, nonconvergence in the tau-equivalent model is much more likely, restricting potential comparisons.
+
+The resulting tables displaying model fit are modified accordingly:
+
+```{r}
+#Model Fit
+SD3_elf_ordered$fit
+
+#Comparison to Tau-equivalent Model Assumed by Cronbach's Alpha
+SD3_elf_ordered$tau
+```
+
 ## Bi-factor Model
 
 `elfs()` also contains baseline functionality to fit bifactor models. For example, we can specify a general "Evil" factor explaining leftover variance in the original model:
