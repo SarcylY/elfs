@@ -7,7 +7,7 @@ considering using latent factor scores in their analyses. By providing a
 data frame and a vector of column names, researchers can generate the
 following output to evaluate their scale:
 
-![](./inst/extdata/BigFiveOutput.jpeg)
+![](https://images.squarespace-cdn.com/content/67893cf9e677d14ec2191a2f/2164a36a-1a02-4cc2-975c-add6a5cf0f5f/BigFiveOutput.jpeg?content-type=image%2Fjpeg)
 
 ## Installation
 
