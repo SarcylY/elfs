@@ -1,12 +1,10 @@
 Package: elfs
 Title: Evaluating and Estimating Latent Factor Scores
 Version: 0.0.0.9000
-Authors@R: c(person(given = "Neil", middle = NA, family = "Hester",
-    "neil.hester@uwaterloo.ca", role = c("aut", "cre"),
-    comment = c(ORCID = "0000-0003-3025-766X")),
-    person(given = "Shawn", middle = NA, family = "Yee",
-    "s6yee@uwaterloo.ca", role = "aut",
-    comment = c(ORCID = "0009-0006-7791-4179")))
+Authors@R: c(person(given = "XXX", middle = NA, family = "XXX",
+    "redacted@gmail.com", role = c("aut", "cre")),
+    person(given = "YYY", middle = NA, family = "YYY",
+    "redacted@gmail.com", role = "aut"))
 Description: Automated evaluation/estimation of latent factor scores, building 
   on 'lavaan'. Provide the data in wide format, column names for each factor,
   and receive comprehensive information regarding model fit, reliability, 
