@@ -3,7 +3,11 @@
 elfs provides a straightforward and user-friendly way to evaluate and
 estimate latent factor scores for psychological scales (Hester et al.,
 2026), attempting to lower the “barrier to entry” for researchers
-considering using latent factor scores in their analyses.
+considering using latent factor scores in their analyses. By providing a
+data frame and a vector of column names, researchers can generate the
+following output to evaluate their scale:
+
+![](./inst/extdata/BigFiveOutput.jpeg)
 
 ## Installation
 
@@ -35,6 +39,7 @@ vignettes below (depending on the kind of model desired):
   - Dynamic fit indices
 - [`vignette("ShortDarkTriad")`](https://sarcyly.github.io/elfs/articles/ShortDarkTriad.md)
   - Multi-factor model
+  - Ordinal measured variables
   - Bi-factor model
 
 ## References

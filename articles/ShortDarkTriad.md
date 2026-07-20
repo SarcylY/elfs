@@ -156,6 +156,157 @@ glimpse(SD3_clean)
 #> $ Psychopathy      <dbl> 0.4784436, -1.1416649, -1.1771523, 1.8157381, -0.1846…
 ```
 
+### Ordinal Measured Variables
+
+An additional specification that measured variables should be treated as
+ordinal variables (i.e., using the DWLS estimator, instead of ML) can be
+specified using the typical `ordered = T` syntax from *lavaan*.
+
+``` r
+
+#column selection can take in a traditional character vector, or use "starts_with()" or "ends_with()"
+SD3_elf_ordered <- elfs(data = SD3_data,
+                        f1_cols = starts_with("M"), f1_name = "Machiavellianism",
+                        f2_cols = starts_with("N"), f2_name = "Narcissism",
+                        f3_cols = starts_with("P"), f3_name = "Psychopathy", 
+                        ordered = T, 
+                        chrome_bypass = T)
+#> Warning in ifelse(as.numeric(cfa_matrix[1, 3]) < 0.001, "< .001", paste0("= ",
+#> : NAs introduced by coercion
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=2.01228e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=2.00482e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=2.00127e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=1.9979e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=1.99781e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=1.9978e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=1.9978e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=1.9978e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=1.9978e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=1.9978e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=1.9978e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=1.9978e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=8.04913e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=8.04913e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=7.64668e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=3.82334e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=3.72775e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=2.81971e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=2.36569e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=2.13868e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=2.02517e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=2.02234e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=2.02099e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=2.00818e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=2.00178e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=1.99858e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=1.9985e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=1.99846e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=1.9981e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=1.99792e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=1.99783e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=1.99783e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=1.99781e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=1.99781e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=1.9978e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=1.9978e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=1.9978e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=1.9978e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=1.9978e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=1.9978e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=1.9978e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=1.9978e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=1.9978e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=1.9978e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=1.9978e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=1.9978e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=1.9978e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=1.9978e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=1.9978e+06, ..): not converged in 1000000 iter.
+#> Warning in pchisq(x2, df = df, ncp = lambda): pnchisq(x=2.01228e+06, f=348,
+#> theta=1.9978e+06, ..): not converged in 1000000 iter.
+```
+
+Note that when `ordered = T`, nonconvergence in the tau-equivalent model
+is much more likely, restricting potential comparisons.
+
+The resulting tables displaying model fit are modified accordingly:
+
+``` r
+
+#Model Fit
+SD3_elf_ordered$fit
+```
+
+|  | Chi² | df | p | CFI | RMSEA | RMSEA_lo | RMSEA_hi | SRMR |
+|:---|:---|:---|:---|:---|:---|:---|:---|:---|
+| Model | 33551.660 | 321.000 | NA | 0.822 | 0.083 | 0.083 | 0.082 | 0.064 |
+| ^(a) Example text for reporting: The fit statistics for the estimated latent variable model are: χ²( 321.000) = 33551.660, p NA, CFI = 0.822, RMSEA = 0.083 (90% CI\[ 0.083, 0.082\]), SRMR = 0.064. |  |  |  |  |  |  |  |  |
+| ^(b) At minimum, report the CFI, RMSEA, and SRMR in your manuscript. To evaluate fit, Dynamic Fit Indices (McNeish & Wolf, 2023) are recommended. Reference the ‘dynamic’ object in the output list for output or for information about how to install this package. |  |  |  |  |  |  |  |  |
+| ^(c) If ordered = TRUE or missing = “ml”, robust CFI and RMSEA values are given above. |  |  |  |  |  |  |  |  |
+| ^(d) Modification indices (in the “modind” object) can be referenced to understand which parameters might be freed in the model to improve model fit. A data-driven approach to improving fit is generally not recommended for existing scales, but some adjustments might be justifiable (e.g., correlated residuals due to item similarities). Adjustments can be specified using the “modify” argument. In this model, setting modify = “M3  N5” would reduce the χ² of the model by 3451. |  |  |  |  |  |  |  |  |
+
+``` r
+
+
+#Comparison to Tau-equivalent Model Assumed by Cronbach's Alpha
+SD3_elf_ordered$tau
+```
+
+|  | Chi² | df | p | CFI | RMSEA | RMS_lo | RMS_hi | SRMR | ΔChi² | Δdf | Δp | ΔCFI | RMSEAᴅ |
+|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|:---|
+| Free Loadings | 33551.660 | 321.000 | NA | 0.822 | 0.083 | 0.083 | 0.082 | 0.064 |  |  |  |  |  |
+| Equal Loadings | 2012282.904 | 348.000 | NA | NaN | Inf | NA | NA | 0.497 | 257213.89 | 27 | 0 | NaN | 2.033 |
+| ^(a) Likelihood Ratio Test comparing the tau-equivalent (i.e., equal loadings) model and the model with freely estimated loadings. If this test is not significant, sum/mean scores are recommended. If this test is significant, latent factor scores are generally recommended.However, for cases in which researchers are otherwise motivated to use sum/mean scores, a sufficiently small ΔCFI and RMSEAᴅ (i.e., close to 0) might be used to justify this decision.The equal loadings model often produces very poor fit with ordinal indicators. |  |  |  |  |  |  |  |  |  |  |  |  |  |
+
 ### Bi-factor Model
 
 [`elfs()`](https://sarcyly.github.io/elfs/reference/elfs.md) also
