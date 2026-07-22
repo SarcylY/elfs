@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# elfs (Evaluation and Estimation of Latent Factor Scores)
+# elfs <a href="https://sarcyly.github.io/elfs/"><img src="man/figures/logo.png" align="right" height="138" alt="elfs website" /></a> (Evaluation and Estimation of Latent Factor Scores)
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -21,6 +21,19 @@ knitr::opts_chunk$set(
 elfs provides a straightforward and user-friendly way to evaluate and estimate latent factor scores for psychological scales (redacted for review, 2026), attempting to lower the "barrier to entry" for researchers considering using latent factor scores in their analyses. By providing a data frame and a vector of column names, researchers can generate the following output to evaluate their scale:
 
 ![](https://images.squarespace-cdn.com/content/67893cf9e677d14ec2191a2f/2164a36a-1a02-4cc2-975c-add6a5cf0f5f/BigFiveOutput.jpeg?content-type=image%2Fjpeg)
+
+The full generated list includes these objects:
+
+1. **flowchart:** the primary output as depicted above
+2. **lfs:** a matrix containing estimated latent factor scores
+3. **model:** the lavaan model object
+4. **summary:** the summary of the lavaan model object, with fit statistics, R-squared values, and standardized scores specified
+5. **modind:** a sorted list of modification indices for the model
+6. **dynamic:** an output object from the dynamic package, if requested
+7. **fit, rel, tau, corr, meas_invar:** HTML table versions of the tables in flowchart from which values can be copy and pasted
+8. **model_group, lfs_group:** if measurement invariance testing is requested, lists containing lavaan model objects and estimated latent factor scores corresponding with configural, weak, strong, and strict invariance tests
+
+By simplifying the inputs required to generate latent factor models and highlighting validity and reliability indices, we hope to encourage users to report more detailed information about their scales (beyond Cronbach’s α) and make deliberate choices regarding their scoring method. See the vignettes for more detail on the input options and interpretation of the output. 
 
 ## Installation
 

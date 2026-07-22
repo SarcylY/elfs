@@ -5,6 +5,8 @@
 \alias{elfs-package}
 \title{elfs: Evaluating and Estimating Latent Factor Scores}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 Automated evaluation/estimation of latent factor scores, building on 'lavaan'. Provide the data in wide format, column names for each factor, and receive comprehensive information regarding model fit, reliability, factor correlations, measurement invariance, and dynamic fit indices.
 }
 \seealso{
@@ -17,12 +19,12 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Neil Hester \email{neil.hester@uwaterloo.ca} (\href{https://orcid.org/0000-0003-3025-766X}{ORCID})
+\strong{Maintainer}: XXX XXX \email{redacted@gmail.com}
 
 Authors:
 \itemize{
-  \item Neil Hester \email{neil.hester@uwaterloo.ca} (\href{https://orcid.org/0000-0003-3025-766X}{ORCID})
-  \item Shawn Yee \email{s6yee@uwaterloo.ca} (\href{https://orcid.org/0009-0006-7791-4179}{ORCID})
+  \item XXX XXX \email{redacted@gmail.com}
+  \item YYY YYY \email{redacted@gmail.com}
 }
 
 }
