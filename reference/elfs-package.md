@@ -17,13 +17,10 @@ Useful links:
 
 ## Author
 
-**Maintainer**: Neil Hester <neil.hester@uwaterloo.ca>
-([ORCID](https://orcid.org/0000-0003-3025-766X))
+**Maintainer**: XXX XXX <redacted@gmail.com>
 
 Authors:
 
-- Neil Hester <neil.hester@uwaterloo.ca>
-  ([ORCID](https://orcid.org/0000-0003-3025-766X))
+- XXX XXX <redacted@gmail.com>
 
-- Shawn Yee <s6yee@uwaterloo.ca>
-  ([ORCID](https://orcid.org/0009-0006-7791-4179))
+- YYY YYY <redacted@gmail.com>

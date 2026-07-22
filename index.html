@@ -13,6 +13,7 @@
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Evaluating and Estimating Latent Factor Scores">
 <meta name="description" content="Automated evaluation/estimation of latent factor scores, building on lavaan. Provide the data in wide format, column names for each factor, and receive comprehensive information regarding model fit, reliability, factor correlations, measurement invariance, and dynamic fit indices.">
 <meta property="og:description" content="Automated evaluation/estimation of latent factor scores, building on lavaan. Provide the data in wide format, column names for each factor, and receive comprehensive information regarding model fit, reliability, factor correlations, measurement invariance, and dynamic fit indices.">
+<meta property="og:image" content="https://sarcyly.github.io/elfs/logo.png">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -61,12 +62,34 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="elfs-evaluation-and-estimation-of-latent-factor-scores">elfs (Evaluation and Estimation of Latent Factor Scores)<a class="anchor" aria-label="anchor" href="#elfs-evaluation-and-estimation-of-latent-factor-scores"></a>
-</h1></div>
+<div class="page-header">
+<img src="logo.png" class="logo" alt=""><h1 id="elfs--evaluation-and-estimation-of-latent-factor-scores">elfs  (Evaluation and Estimation of Latent Factor Scores)<a class="anchor" aria-label="anchor" href="#elfs--evaluation-and-estimation-of-latent-factor-scores"></a>
+</h1>
+</div>
 <!-- badges: start -->
 <!-- badges: end -->
 <p>elfs provides a straightforward and user-friendly way to evaluate and estimate latent factor scores for psychological scales (redacted for review, 2026), attempting to lower the “barrier to entry” for researchers considering using latent factor scores in their analyses. By providing a data frame and a vector of column names, researchers can generate the following output to evaluate their scale:</p>
 <p><img src="https://images.squarespace-cdn.com/content/67893cf9e677d14ec2191a2f/2164a36a-1a02-4cc2-975c-add6a5cf0f5f/BigFiveOutput.jpeg?content-type=image%2Fjpeg"></p>
+<p>The full generated list includes these objects:</p>
+<ol style="list-style-type: decimal">
+<li>
+<strong>flowchart:</strong> the primary output as depicted above</li>
+<li>
+<strong>lfs:</strong> a matrix containing estimated latent factor scores</li>
+<li>
+<strong>model:</strong> the lavaan model object</li>
+<li>
+<strong>summary:</strong> the summary of the lavaan model object, with fit statistics, R-squared values, and standardized scores specified</li>
+<li>
+<strong>modind:</strong> a sorted list of modification indices for the model</li>
+<li>
+<strong>dynamic:</strong> an output object from the dynamic package, if requested</li>
+<li>
+<strong>fit, rel, tau, corr, meas_invar:</strong> HTML table versions of the tables in flowchart from which values can be copy and pasted</li>
+<li>
+<strong>model_group, lfs_group:</strong> if measurement invariance testing is requested, lists containing lavaan model objects and estimated latent factor scores corresponding with configural, weak, strong, and strict invariance tests</li>
+</ol>
+<p>By simplifying the inputs required to generate latent factor models and highlighting validity and reliability indices, we hope to encourage users to report more detailed information about their scales (beyond Cronbach’s α) and make deliberate choices regarding their scoring method. See the vignettes for more detail on the input options and interpretation of the output.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
