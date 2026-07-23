@@ -70,8 +70,12 @@ vignettes below (depending on the kind of model desired):
   - Ordinal measured variables
   - Bi-factor model
 
-## References
+## Credits and References
 
 \[REDACTED\]. (2026). *elfs: An R Package to Promote the Intentional
 Selection of Scoring Method for Psychological Scales* \[Manuscript in
 preparation\].
+
+Hex sticker design: \[REDACTED\] & [Marianne
+Oyama](https://marianneoyama.com/) <br> Hex sticker illustration:
+[Marianne Oyama](https://marianneoyama.com/)
